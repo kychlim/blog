@@ -1,0 +1,53 @@
+
+{% extends 'base.html' %}
+{% block container %}
+    <script src="/static/js/posts.js"></script>
+    <div class="container">
+        <h1>Bulletin Board System(BBS)</h1>
+
+
+{% if user.is_authenticated %}
+         <button class="btn btn-primary btn-sm"
+                 onclick="new_post()">새글 작성</button>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-outline-info btn-sm float-right">{{ user.username }} (LOGOUT)</a>
+        {% else %}
+        <button class="btn btn-primary btn-sm">새글 작성</button> (로그인 필요)
+        <a href="{% url 'accounts:login' %}" class="btn btn-outline-info btn-sm float-right">LOGIN</a>
+{% endif %}
+
+        <div class="m-1">
+
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">작성자</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">수정</th>
+                        <th scope="col">삭제</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+
+                    <tr>
+                        <th scope="row">{{ post.id }}</th>
+                        <td>{{ post.auth_author.username }}</td>
+                        <td>
+                            <a href="{% url 'posts:read' post.id %}">{{ post.title }}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'posts:update' post.id %}" class="btn btn-warning btn-sm">수정</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'posts:delete' post.id %}" class="btn btn-danger btn-sm">삭제</a>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
